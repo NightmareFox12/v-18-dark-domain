@@ -2,43 +2,48 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 public class DialogueController : MonoBehaviour
 {
-    // LA MAGIA: Esto permite llamar al script desde CUALQUIER lugar
     public static DialogueController Instance;
 
     [Header("UI References")]
     public TMP_Text nameText;
     public TMP_Text sentenceText;
-    public GameObject dialogPanel; // Para encender/apagar toda la caja
+    public GameObject dialogPanel;
 
     [Header("Settings")]
     public float typingSpeed = 0.04f;
 
     private bool isTyping = false;
+    private bool cancelTyping = false;
+    private bool inputBuffer = false; // El "Vigilante" del input
 
     private void Awake()
     {
-        // Configuración del Singleton
-        if (Instance == null)
-        {
-            Instance = this;
-            // No destruye este objeto al cambiar de escena (opcional)
-            // DontDestroyOnLoad(gameObject); 
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        // Configuración Singleton
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
 
-        dialogPanel.SetActive(false); // Empezamos ocultos
+        dialogPanel.SetActive(false);
+    }
+
+    private void Update()
+    {
+        // El Update siempre está escuchando, no importa si la Corrutina duerme
+        if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame ||
+            Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame ||
+            (Pointer.current != null && Pointer.current.press.wasPressedThisFrame))
+        {
+            inputBuffer = true;
+        }
     }
 
     public void PlayDialogue(DialogueData data, UnityEvent callback = null)
     {
-        if (isTyping) return; // Evitar que se solapen diálogos
-
+        if (isTyping) return;
+        
         dialogPanel.SetActive(true);
         StartCoroutine(TypeSequence(data, callback));
     }
@@ -51,21 +56,41 @@ public class DialogueController : MonoBehaviour
         {
             nameText.text = dialogue.characterName;
             sentenceText.text = "";
+            cancelTyping = false;
+            inputBuffer = false; // Reset al empezar cada frase
 
+            // --- FASE 1: ESCRIBIR LETRA POR LETRA ---
             foreach (char letter in dialogue.sentence)
             {
+                if (inputBuffer) 
+                {
+                    cancelTyping = true;
+                    break; 
+                }
+
                 sentenceText.text += letter;
-                // Aquí podrías meter un sonido: AudioSource.PlayOneShot(beep);
                 yield return new WaitForSeconds(typingSpeed);
             }
 
-            yield return new WaitForSeconds(data.paragraphDelay);
+            // Si se presionó saltar, mostramos todo el texto de una
+            if (cancelTyping) sentenceText.text = dialogue.sentence;
+
+            // Limpiamos el buffer y esperamos un frame para evitar saltos accidentales
+            inputBuffer = false; 
+            yield return new WaitForEndOfFrame();
+
+            // --- FASE 2: ESPERAR AL JUGADOR PARA CONTINUAR ---
+            // Se queda aquí hasta que el Update vuelva a poner inputBuffer en true
+            yield return new WaitUntil(() => inputBuffer);
+            
+            inputBuffer = false; // Limpiamos para el siguiente párrafo
+            yield return new WaitForSeconds(0.1f); // Pequeño delay de cortesía
         }
 
         isTyping = false;
         dialogPanel.SetActive(false);
-
-        // Si pasamos una función para cuando termine, la ejecutamos
+        
+        // Ejecutamos cualquier evento que hayamos mandado (como cerrar la intro)
         callback?.Invoke();
     }
 }
