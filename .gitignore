@@ -1,0 +1,52 @@
+# --- Unity ---
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+/[Aa]ssets/AssetStoreTools*
+
+# --- Archivos generados por Visual Studio / VS Code / Rider ---
+.vs/
+.vscode/
+ExportedObj/
+.consulo/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.opendb
+*.VC.db
+
+# --- Archivos del Sistema ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Plugins de Unity (Normalmente no se suben si se pueden regenerar) ---
+/[Aa]ssets/Plugins/Editor/JetBrains*
+/[Aa]ssets/Plugins/Editor/Visual Studio*
+
+# --- Crashlytics / Reportes ---
+sysinfo.txt
+
+# --- Builds de WebGL ---
+/[Aa]ssets/StreamingAssets/aa/*
+/[Aa]ssets/StreamingAssets/UnityServicesConfig.json
+
+# --- Builds terminadas (carpetas comunes) ---
+[Bb]uild/
+[Bb]uilds/
+dist/
+
+# --- Otros ---
+.utmp/
