@@ -1,14 +1,35 @@
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    const int FPS = 165;
+    const string GAME_NAME = "V-18 Dark Domain";
+
+    [Header("Buttons")]
+    public Button playButton;
+    public Button optionsButton;
+    public Button creditsButton;
+    public Button exitButton;
+
+// Unity functions
+    void Awake(){
+        playButton.onClick.AddListener(() => { 
+            Debug.Log("🎮 ¡PLAY CLICK DETECTADO!"); 
+        });
+
+        exitButton.onClick.AddListener(() => { 
+            GameManager.Instance.ExitGame();
+        });
+    }
+
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
