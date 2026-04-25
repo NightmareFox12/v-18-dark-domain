@@ -17,17 +17,17 @@ public class MainMenu : MonoBehaviour
 // Unity functions
     void Awake(){
         playButton.onClick.AddListener(() => { 
-            Debug.Log("🎮 ¡PLAY CLICK DETECTADO!"); 
+            SceneManager.LoadScene("GameScene");
         });
 
-   
+        exitButton.onClick.AddListener(() => { 
+            Application.Quit();
+        });
     }
 
     void Start()
     {
-        exitButton.onClick.AddListener(() => { 
-            GameManager.Instance.ExitGame();
-        }); 
+        
     }
 
     void Update()
