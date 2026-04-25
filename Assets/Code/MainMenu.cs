@@ -20,14 +20,14 @@ public class MainMenu : MonoBehaviour
             Debug.Log("🎮 ¡PLAY CLICK DETECTADO!"); 
         });
 
-        exitButton.onClick.AddListener(() => { 
-            GameManager.Instance.ExitGame();
-        });
+   
     }
 
     void Start()
     {
-        
+        exitButton.onClick.AddListener(() => { 
+            GameManager.Instance.ExitGame();
+        }); 
     }
 
     void Update()
