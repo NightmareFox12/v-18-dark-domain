@@ -14,4 +14,5 @@ public class Dialogue
 public class DialogueData : ScriptableObject
 {
     public Dialogue[] dialogues; 
+    public float paragraphDelay = 2.0f;
 }
