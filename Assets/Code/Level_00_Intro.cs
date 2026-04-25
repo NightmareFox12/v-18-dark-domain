@@ -3,7 +3,7 @@ using UnityEngine;
 public class Level_00_Intro : MonoBehaviour
 {
     [Header("Data to Play")]
-    public DialogueData introContent; // Aquí arrastrarás el "disco" de Juan
+    public DialogueData introContent;
 
     void Start()
     {
